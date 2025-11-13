@@ -4,10 +4,10 @@ services:
       dockerfile: ./Dockerfile
       context: ./
     restart: always
-    image: module-name
-    container_name: module-name
+    image: marketplace-auth-api
+    container_name: marketplace-auth-api
     volumes:
-      - /home/kinoko/logs/module-name:/logs
+      - /home/kinoko/logs/marketplace-auth-api:/logs
     #      - ./logs:/logs                             # Для отладки на windows машине
     networks:
       - backend

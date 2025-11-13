@@ -3,7 +3,7 @@ logging:
 
 spring:
   application:
-    name: kotlin-template-repository
+    name: marketplace-auth-api
 
 server:
   port: 33300

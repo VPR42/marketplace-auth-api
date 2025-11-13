@@ -1,1 +1,1 @@
-rootProject.name = "kotlin-template-repository"
+rootProject.name = "marketplace-auth-api"
