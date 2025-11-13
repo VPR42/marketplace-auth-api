@@ -6,4 +6,4 @@ spring:
     name: marketplace-auth-api
 
 server:
-  port: 33300
+  port: 33301

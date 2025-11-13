@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class KotlinTemplateRepositoryApplication
+class MarketplaceAuthApiApplication
 
 fun main(args: Array<String>) {
-    runApplication<KotlinTemplateRepositoryApplication>(*args)
+    runApplication<MarketplaceAuthApiApplication>(*args)
 }
