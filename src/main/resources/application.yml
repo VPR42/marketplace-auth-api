@@ -4,6 +4,27 @@ logging:
 spring:
   application:
     name: marketplace-auth-api
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    # Docker
+#    url: jdbc:postgresql://mp-db-prod:5432/mp_db_prod
+#    username: mp_prod_user
+#    password: mp_prod_user
+    # Dev
+    url: jdbc:postgresql://kinoko.su:5432/mp_db_dev
+    username: mp_dev_user
+    password: mp_dev_passwd
+
+app:
+  user:
+    default-avatar-url: https://avatar.iran.liara.run/username
+  auth:
+    secret: a45933b42fc4f16f67902829ab2c259205f3080e672c1695beee0f68b915c579fedc4b37737062bd
+    access-life-time: 900000
+    refresh-life-time: 2592000000
+  schedule:
+    city-list-update: 0 0/30 * * * *
+
 
 server:
   port: 33301

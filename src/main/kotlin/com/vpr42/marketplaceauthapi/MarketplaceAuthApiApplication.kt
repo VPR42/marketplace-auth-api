@@ -1,9 +1,14 @@
-package com.vpr42.kotlintemplaterepository
+package com.vpr42.marketplaceauthapi
 
+import com.vpr42.marketplaceauthapi.properties.ApplicationProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
+@EnableConfigurationProperties(
+    ApplicationProperties::class
+)
 class MarketplaceAuthApiApplication
 
 fun main(args: Array<String>) {
