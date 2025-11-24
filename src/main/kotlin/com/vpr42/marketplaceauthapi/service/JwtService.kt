@@ -27,6 +27,7 @@ class JwtService(
     private fun generateAccessToken(user: Users): String =
         Jwts.builder()
             .subject(user.email)
+            .claim("id", user.id)
             .expiration(
                 Date(
                     System.currentTimeMillis() + applicationProperties.auth.accessLifeTime
@@ -38,6 +39,7 @@ class JwtService(
     private fun generateRefreshToken(user: Users): String =
         Jwts.builder()
             .subject(user.email)
+            .claim("id", user.id)
             .expiration(
                 Date(
                     System.currentTimeMillis() + applicationProperties.auth.refreshLifeTime
