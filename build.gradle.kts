@@ -51,6 +51,9 @@ dependencies {
     // Spring Web
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    // Eureka
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+
     // JOOQ
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
