@@ -22,12 +22,25 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        try {
-            if (request.requestURI.startsWith("/api/auth") && request.requestURI != "/api/auth/who-am-i") {
+        if (request.requestURI.startsWith("/api/auth") && request.requestURI != "/api/auth/who-am-i") {
+            try {
                 filterChain.doFilter(request, response)
-                return
+            } catch (_: Exception) {
+                logger.warn("User not found")
+                response.status = HttpServletResponse.SC_BAD_REQUEST
+                response.contentType = "application/json"
+                response.writer.write(
+                    getErrorResponse(
+                        status = 400,
+                        message = "User not found",
+                        path = request.requestURI
+                    )
+                )
             }
+            return
+        }
 
+        try {
             val authHeader = request.getHeader("Authorization")
 
             if (authHeader == null || authHeader.isEmpty()) {
@@ -55,15 +68,20 @@ class JwtAuthenticationFilter(
             response.status = HttpServletResponse.SC_UNAUTHORIZED
             response.contentType = "application/json"
             response.writer.write(
-                """
-            {
-                "status": 401,
-                "error": "Unauthorized",
-                "message": "Токен не валиден",
-                "path": "${request.requestURI}"
-            }
-                """.trimIndent()
+                getErrorResponse(
+                    status = 401,
+                    message = "Token is invalid",
+                    path = request.requestURI
+                )
             )
         }
     }
+
+    private fun getErrorResponse(status: Int, message: String, path: String) = """
+        {
+            "status": $status,
+            "message": "$message",
+            "path": "$path"
+        }
+    """.trimIndent()
 }
