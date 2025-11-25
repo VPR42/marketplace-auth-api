@@ -6,11 +6,6 @@ spring:
     name: marketplace-auth-api
   datasource:
     driver-class-name: org.postgresql.Driver
-    # Docker
-#    url: jdbc:postgresql://mp-db-prod:5432/mp_db_prod
-#    username: mp_prod_user
-#    password: mp_prod_user
-    # Dev
     url: jdbc:postgresql://kinoko.su:5432/mp_db_dev
     username: mp_dev_user
     password: mp_dev_passwd
@@ -25,6 +20,19 @@ app:
   schedule:
     city-list-update: 0 0/30 * * * *
 
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://marketplace-eureka:33307/eureka
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    csrf:
+      enabled: true
 
 server:
   port: 33301

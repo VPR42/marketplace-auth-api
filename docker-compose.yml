@@ -1,5 +1,5 @@
 services:
-  bank-api:
+  marketplace-auth-api:
     build:
       dockerfile: ./Dockerfile
       context: ./
@@ -12,7 +12,7 @@ services:
     networks:
       - backend
     ports:
-      - "33300:33300"
+      - "33301:33301"
 
 networks:
   backend:
