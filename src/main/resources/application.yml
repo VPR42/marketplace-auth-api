@@ -1,5 +1,7 @@
 logging:
   config: 'classpath:log4j2.yml'
+  level:
+    com.netflix.discovery.shared: error
 
 spring:
   application:
@@ -30,9 +32,11 @@ eureka:
 springdoc:
   api-docs:
     enabled: true
+    path: /api/auth/docs
   swagger-ui:
     csrf:
       enabled: true
+    path: /api/auth/swagger
 
 server:
   port: 33301
