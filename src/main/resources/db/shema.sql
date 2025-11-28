@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS cities
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_region_city_name ON cities (region, name);
 
-
 CREATE TABLE IF NOT EXISTS users
 (
     id          UUID PRIMARY KEY,
@@ -34,7 +33,10 @@ CREATE TABLE IF NOT EXISTS masters_info
     description   TEXT         NULL,
     pseudonym     VARCHAR(100) NULL UNIQUE,
     phone_number  VARCHAR(10)  NOT NULL UNIQUE,
-    working_hours VARCHAR(25)  NULL -- костыль
+    about         TEXT         NULL,
+    days_of_week  INT[]        NULL,
+    start_time    VARCHAR(5)   NULL,
+    end_time      VARCHAR(5)   NULL
 );
 
 CREATE TABLE IF NOT EXISTS master_skills
@@ -43,7 +45,6 @@ CREATE TABLE IF NOT EXISTS master_skills
     skill_id  INT  NOT NULL REFERENCES skills ON DELETE RESTRICT
 );
 
--- Будем задавать вручную (Хранить энамами там все дела)
 CREATE TABLE IF NOT EXISTS categories
 (
     id   SERIAL PRIMARY KEY,
@@ -62,8 +63,8 @@ CREATE TABLE IF NOT EXISTS jobs
     master_id   UUID                     NOT NULL REFERENCES users ON DELETE CASCADE,
     name        VARCHAR(100)             NOT NULL,
     description TEXT                     NOT NULL,
-    price       DECIMAL(5, 2)            NOT NULL CHECK (price > 0),
-    cover_url   VARCHAR(255)             NULL,
+    price       DECIMAL(8, 2)            NOT NULL CHECK (price > 0),
+    cover_url   TEXT                     NULL,
     category_id INT                      NOT NULL REFERENCES categories ON DELETE RESTRICT,
     created_at  TIMESTAMP WITH TIME ZONE NOT NULL
 );
@@ -85,18 +86,19 @@ CREATE TABLE IF NOT EXISTS favourites
 
 CREATE TABLE IF NOT EXISTS orders
 (
-    id         BIGSERIAL PRIMARY KEY,
-    user_id    UUID                     NOT NULL REFERENCES users ON DELETE CASCADE,
-    job_id     UUID                     NOT NULL REFERENCES jobs ON DELETE CASCADE,
-    status     VARCHAR(15)              NOT NULL,
-    ordered_at TIMESTAMP WITH TIME ZONE NOT NULL
+    id                BIGSERIAL PRIMARY KEY,
+    user_id           UUID                     NOT NULL REFERENCES users ON DELETE CASCADE,
+    job_id            UUID                     NOT NULL REFERENCES jobs ON DELETE CASCADE,
+    status            VARCHAR(15)              NOT NULL,
+    ordered_at        TIMESTAMP WITH TIME ZONE NOT NULL,
+    status_changed_at TIMESTAMP WITH TIME ZONE NULL
 );
 
 CREATE TABLE IF NOT EXISTS messages
 (
     id          UUID PRIMARY KEY,
-    first_user  UUID          REFERENCES users (id) ON DELETE SET NULL,
-    second_user UUID          REFERENCES users (id) ON DELETE SET NULL,
+    master_id   UUID          REFERENCES users (id) ON DELETE SET NULL,
+    customer_id UUID          REFERENCES users (id) ON DELETE SET NULL,
     message     VARCHAR(1000) NOT NULL,
     initiator   VARCHAR(1)    NOT NULL,
     sent_at     TIMESTAMP     NOT NULL
