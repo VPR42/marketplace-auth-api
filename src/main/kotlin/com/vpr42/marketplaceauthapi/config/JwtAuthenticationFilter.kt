@@ -2,8 +2,10 @@ package com.vpr42.marketplaceauthapi.config
 
 import com.vpr42.marketplaceauthapi.service.JwtService
 import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -25,16 +27,23 @@ class JwtAuthenticationFilter(
         if (request.requestURI.startsWith("/api/auth") && request.requestURI != "/api/auth/who-am-i") {
             try {
                 filterChain.doFilter(request, response)
-            } catch (_: Exception) {
-                logger.warn("User not found")
-                response.status = HttpServletResponse.SC_BAD_REQUEST
-                response.contentType = "application/json"
-                response.writer.write(
-                    getErrorResponse(
-                        status = 400,
-                        message = "User not found",
+            } catch (ex: ServletException) {
+                if (ex.rootCause is BadCredentialsException) {
+                    logger.warn("Bad credentials")
+                    response.handleError(
+                        status = HttpServletResponse.SC_BAD_REQUEST,
+                        message = "Неверные логин или пароль",
                         path = request.requestURI
                     )
+                } else {
+                    throw ex
+                }
+            } catch (_: Exception) {
+                logger.warn("User not found")
+                response.handleError(
+                    status = HttpServletResponse.SC_NOT_FOUND,
+                    message = "User not found",
+                    path = request.requestURI
                 )
             }
             return
@@ -75,6 +84,18 @@ class JwtAuthenticationFilter(
                 )
             )
         }
+    }
+
+    private fun HttpServletResponse.handleError(status: Int, message: String, path: String) {
+        this.status = status
+        this.contentType = "application/json;charset=UTF-8"
+        this.writer.write(
+            getErrorResponse(
+                status = status,
+                message = message,
+                path = path
+            )
+        )
     }
 
     private fun getErrorResponse(status: Int, message: String, path: String) = """
